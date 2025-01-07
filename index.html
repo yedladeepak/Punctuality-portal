@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Mark Student Attendance</h1>
+        <form action="/mark-attendance" method="POST" onsubmit="return validateTime()">
+            <div class="form-group">
+                <label for="student_id">Student ID</label>
+                <input type="text" class="form-control" id="student_id" name="student_id" required>
+            </div>
+
+            <!-- Option 1: Time Picker (HH:MM) -->
+            <div class="form-group">
+                <label for="time_picker">Arrival Time (Select HH:MM)</label>
+                <input type="time" class="form-control" id="time_picker" name="time_picker" onchange="toggleManualInput()">
+            </div>
+
+            <!-- Option 2: Manual Time Input (HH:MM:SS) -->
+            <div class="form-group">
+                <label for="arrival_time">Or Enter Time Manually (HH:MM:SS)</label>
+                <input type="text" class="form-control" id="arrival_time" name="arrival_time" placeholder="HH:MM:SS" onchange="toggleTimePicker()">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Mark Attendance</button>
+        </form>
+    </div>
+
+    <script>
+        function validateTime() {
+            var arrivalTime = document.getElementById('arrival_time').value;
+            var timePickerValue = document.getElementById('time_picker').value;
+            
+            // Allow either the time picker or manual input to be filled, but not both
+            if (arrivalTime && timePickerValue) {
+                alert('Please fill in only one: time picker or manual time input.');
+                return false;
+            }
+
+            // If manual time is used, validate the format (HH:MM:SS)
+            if (arrivalTime) {
+                var timePattern = /^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/;
+                if (!timePattern.test(arrivalTime)) {
+                    alert('Please enter time in HH:MM:SS format');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function toggleManualInput() {
+            var arrivalTimeInput = document.getElementById('arrival_time');
+            if (document.getElementById('time_picker').value) {
+                arrivalTimeInput.value = ''; // Clear manual input
+                arrivalTimeInput.disabled = true; // Disable manual input
+            } else {
+                arrivalTimeInput.disabled = false; // Enable manual input
+            }
+        }
+
+        function toggleTimePicker() {
+            var timePickerInput = document.getElementById('time_picker');
+            if (document.getElementById('arrival_time').value) {
+                timePickerInput.value = ''; // Clear time picker
+                timePickerInput.disabled = true; // Disable time picker
+            } else {
+                timePickerInput.disabled = false; // Enable time picker
+            }
+        }
+    </script>
+</body>
+</html>
